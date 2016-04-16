@@ -3,14 +3,18 @@ public class File {
 	private String FileName;
 	private String FilePath;
 	private int[] inode;
+	private int[][] inodeMulti1;
+	private int[][][] inodeMulti2;
+	private int[][][][] inodeMulti3;
 	private int inodePointer; /*The pointer till which inode has been populated*/
 	private boolean pointerFull; /*Is the current inode pointer full?*/
 	private int inodeLevel;
+	private int level2, level3;
 	
 	public File(String FileName, String FilePath ){
 		this.FileName = FileName;
 		this.FilePath = FilePath;
-		this.inode = new int[10];
+		this.inode = new int[8];
 		this.inodePointer = 0;
 		this.pointerFull = false;
 		this.inodeLevel = 0;
@@ -48,18 +52,46 @@ public class File {
 			int level = this.getInodeLevel();
 			
 			switch(level){
-				case 8: if(this.inode[this.inodePointer] == -1){
-					this.inode[this.inodePointer] = new int[4]; // 4 is the block size
+				case 8: if(this.inodeMulti1 == null){
+					this.inodePointer = 0;
+					this.inodeMulti1 = new int[1][4]; //Block size is 4
+					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
+				}else{
+					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
 				}
+				this.inodePointer += 1;
 					break;
-				case 9: break;
-				case 10: break;
+				case 9: if(this.inodeMulti2 == null){
+					this.inodePointer = 0;
+					this.level2 = 0;
+					this.inodeMulti2 = new int[1][4][4];
+					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
+				}else{
+					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
+				}
+				this.inodePointer += 1;
+				this.level2 += 1;
+					break;
+				case 10: if(this.inodeMulti3 == null){
+					this.inodePointer = 0;
+					this.level2 = 0;
+					this.level3 = 0;
+					this.inodeMulti3 = new int[1][4][4][4];
+					this.inodeMulti3[0][this.level2][this.level3][this.inodePointer] = memoryIndex;
+				}else{
+					this.inodeMulti3[0][this.level2][this.level3][this.inodePointer] = memoryIndex;
+				}
+					this.inodePointer += 1;
+					this.level2 += 1;
+					this.level3 += 1;
+					break;
+				default: System.out.println("Error setting inode pointer");
+					break;
 			}
 		}else{
-			
+			this.inode[this.inodePointer] = memoryIndex;
+			this.inodePointer += 1;
 		}
-		this.inode[this.inodePointer] = memoryIndex;
-		this.inodePointer += 1;
 	}
 	
 	public int getInodeLevel(){
