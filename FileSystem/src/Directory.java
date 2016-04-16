@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.io.Serializable; 
 
 
-public class Directory {
+public class Directory implements Serializable{
 	private String DirectoryName;
 	private String DirectoryPath;
 	private ArrayList<File> files;
@@ -51,5 +52,10 @@ public class Directory {
 				return f;
 		}
 		return null;
+	}
+	
+	public boolean removeFile(String name){
+		File f = this.getFile(name);
+		return this.files.remove(f);
 	}
 }

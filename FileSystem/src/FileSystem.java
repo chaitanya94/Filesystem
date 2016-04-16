@@ -1,8 +1,14 @@
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Scanner;
 
-public class FileSystem{
+public class FileSystem implements Serializable{
 	/*20MB of memory with block size being 4 bytes*/
 	public char[] memory = new char[1024*1024*20]; 
 	public boolean[] memoryUse = new boolean[1024*1024*20];
@@ -22,7 +28,7 @@ public class FileSystem{
 		/**/
 	}
 	
-	public void execute(String[] args) throws IOException{
+	public void execute(String[] args) throws IOException, ClassNotFoundException{
 		
 		if(args[0]==""){
 			help();
@@ -35,6 +41,12 @@ public class FileSystem{
 				case "mkdir": createDirectory(args);
 					break;
 				case "read": readFile(args);
+					break;
+				case "save": saveFile(args);
+					break;
+				case "open": openFile(args);
+					break;
+				case "close": closeFile(args);
 					break;
 				default: help();
 					break;
@@ -146,5 +158,44 @@ public class FileSystem{
 		}else{
 			System.out.println("File does not exist!!");
 		}
+	}
+	public void saveFile(String[] args) throws IOException{
+		String currentDir = System.getProperty("user.dir");
+		currentDir = currentDir + "/src/";
+		String fileName = args[1];
+		File f = this.currentDirectory.getFile(fileName);
+		FileOutputStream fout = new FileOutputStream(currentDir + fileName + ".dat");
+		ObjectOutputStream out = new ObjectOutputStream(fout);
+
+		out.writeObject(f);
+		out.flush();
+		out.close();
+	}
+	
+	public void openFile(String[] args) throws IOException, ClassNotFoundException{
+		String currentDir = System.getProperty("user.dir");
+		currentDir = currentDir + "/src/";
+		String fileName = args[1];
+		File f = null;
+		try{
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
+					currentDir + fileName + ".dat"));
+			f = (File) in.readObject();
+			in.close();
+		}catch (Exception e){
+			System.out.println("File does not exist. Please create file!");
+		}
+		this.currentDirectory.addFile(f);
+	}
+	
+	public void closeFile(String[] args) throws IOException{
+		System.out.println("Do you want to save your changes? ");
+		Scanner sc = new Scanner(System.in);
+		
+		if(sc.nextLine().equals("yes") || sc.nextLine().equals("y")){
+			this.saveFile(args);
+		}
+		String name = args[1];
+		this.currentDirectory.removeFile(name);
 	}
 }

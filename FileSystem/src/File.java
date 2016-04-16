@@ -1,5 +1,6 @@
+import java.io.Serializable; 
 
-public class File {
+public class File implements Serializable{
 	private String FileName;
 	private String FilePath;
 	private int[] inode;
