@@ -56,18 +56,26 @@ public class File {
 					this.inodePointer = 0;
 					this.inodeMulti1 = new int[1][4]; //Block size is 4
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
-				}else{
+					
+					this.inodePointer += 1;
+				}else if(this.inodePointer < 3){
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
+					
+					this.inodePointer += 1;
+				}else{
+					this.incrementLevel();
+					this.setPointer(memoryIndex);
 				}
-				this.inodePointer += 1;
 					break;
 				case 9: if(this.inodeMulti2 == null){
 					this.inodePointer = 0;
 					this.level2 = 0;
 					this.inodeMulti2 = new int[1][4][4];
 					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
-				}else{
+				}else if(this.level2 < 4 && this.inodePointer < 4){
 					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
+				}else if(this.level2 > 3 && this.incrementPointer() < 4){
+					
 				}
 				this.inodePointer += 1;
 				this.level2 += 1;
