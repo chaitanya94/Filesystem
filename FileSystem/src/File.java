@@ -16,8 +16,8 @@ public class File {
 		this.FilePath = FilePath;
 		this.inode = new int[8];
 		this.inodePointer = 0;
-		this.pointerFull = false;
-		this.inodeLevel = 0;
+		this.pointerFull = true;
+		this.inodeLevel = -1;
 		
 		for(int i = 0;i < this.inode.length; i++)
 			this.inode[i] = -1;
@@ -135,5 +135,21 @@ public class File {
 	
 	public boolean isMultilevel(){
 		return this.inodeLevel > 7;
+	}
+	
+	public int getLevel(){
+		return this.inodeLevel;
+	}
+	
+	public int[][] getMulti1(){
+		return this.inodeMulti1;
+	}
+	
+	public int[][][] getMulti2(){
+		return this.inodeMulti2;
+	}
+	
+	public int[][][][] getMulti3(){
+		return this.inodeMulti3;
 	}
 }

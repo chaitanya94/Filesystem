@@ -34,6 +34,8 @@ public class FileSystem{
 					break;
 				case "mkdir": createDirectory(args);
 					break;
+				case "read": readFile(args);
+					break;
 				default: help();
 					break;
 			}
@@ -44,7 +46,9 @@ public class FileSystem{
 		String str = "Welcome to the IT308 Filesystem. Please specify some input parameters. Some useful commands are:\n" +
 				"1. help\n" +
 				"2. create <filename>\n" +
-				"3. write <filename> <file_to_read>";
+				"3. write <filename> <file_to_read>\n" +
+				"4. mkdir <directory_name>\n" +
+				"5. read <file_name>";
 		System.out.println(str);
 	}
 	
@@ -59,7 +63,7 @@ public class FileSystem{
 		String nameToRead = args[2];
 		try{
 			String currentDir = System.getProperty("user.dir");
-			System.out.println(currentDir+"/src/"+nameToRead);
+//			System.out.println(currentDir+"/src/"+nameToRead);
 			fileToRead = new BufferedReader(new FileReader(currentDir+"/src/"+nameToRead));
 			/*Need to do the following:
 			 * 1. Open file using args[1]
@@ -79,7 +83,7 @@ public class FileSystem{
 					this.memoryIndex += 1;
 					counter += 1;
 					
-					if(counter > 4){
+					if(counter > 3){
 						counter = 0;
 						toWrite.incrementLevel();
 						toWrite.setPointerFull(false);
@@ -94,6 +98,53 @@ public class FileSystem{
 	}
 	
 	public void createDirectory(String[] args){
+		/*TO FILL*/
+	}
+	
+	public void readFile(String[] args){
+		String name = args[1];
+		File f = this.currentDirectory.getFile(name);
 		
+		if(f != null){
+			int level = f.getInodeLevel();
+			for(int i = 0;i < (level + 1); i++){
+				if(i == 8){
+					int[][] inodeMulti1 = f.getMulti1();
+					for(int j = 0;j < 4; j++){
+						for(int k = 0;k < 4; k++){
+							System.out.print(this.memory[inodeMulti1[0][j]] + k);
+						}
+					}
+				}else if(i == 9){
+					int[][][] inodeMulti2 = f.getMulti2();
+					for(int j = 0;j < 4;j++){
+						for(int k = 0;k < 4;k++){
+							for(int p = 0;p < 4;p++){
+								System.out.print(this.memory[inodeMulti2[0][j][k]] + p);
+							}
+						}
+					}
+				}else if(i == 10){
+					int[][][][] inodeMulti3 = f.getMulti3();
+					for(int j = 0;j < 4; j++){
+						for(int k = 0;k < 4;k++){
+							for(int p = 0;p < 4;p++){
+								for(int q = 0;q < 4; q++){
+									System.out.print(this.memory[inodeMulti3[0][j][k][p]] + q);
+								}
+							}
+						}
+					}
+				}else{
+					int[] inode = f.getInode();
+					for(int j = 0; j < 4; j++){
+						System.out.print(this.memory[inode[i] + j]);
+					}
+				}
+			}
+			System.out.println();
+		}else{
+			System.out.println("File does not exist!!");
+		}
 	}
 }

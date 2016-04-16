@@ -10,8 +10,9 @@ public class Main {
 		while(true){
 			System.out.print("$ ");
 			String[] str = sc.nextLine().trim().split(" ");
-			if(str.length == 1 && str[0] == "quit")
+			if(str[0].equals("quit")){
 				break;
+			}
 			fs.execute(str);
 		}
 	}
