@@ -58,9 +58,8 @@ public class FileSystem{
 			 * */
 			File toWrite = this.currentDirectory.getFile(args[1]);
 			if(toWrite.isPointerFull()){
-				toWrite.incrementPointer();
-				toWrite.setPointerFull(false);
 				toWrite.incrementLevel();
+				toWrite.setPointerFull(false);
 				
 				toWrite.setPointer(this.memoryIndex);
 				int c;
@@ -72,10 +71,9 @@ public class FileSystem{
 					
 					if(counter > 4){
 						counter = 0;
-						toWrite.incrementPointer();
+						toWrite.incrementLevel();
 						toWrite.setPointerFull(false);
 						toWrite.setPointer(this.memoryIndex);
-						toWrite.incrementLevel();
 					}
 				}
 			}

@@ -43,15 +43,12 @@ public class File {
 		this.pointerFull = b;
 	}
 	
-	public void incrementPointer(){
-		this.inodePointer += 1;
-	}
-	
 	public void setPointer(int memoryIndex){
 		if(this.isMultilevel()){
 			int level = this.getInodeLevel();
 			
 			switch(level){
+				/*CASE 8*/
 				case 8: if(this.inodeMulti1 == null){
 					this.inodePointer = 0;
 					this.inodeMulti1 = new int[1][4]; //Block size is 4
@@ -67,27 +64,53 @@ public class File {
 					this.setPointer(memoryIndex);
 				}
 					break;
+				/*CASE 9*/
 				case 9: if(this.inodeMulti2 == null){
 					this.inodePointer = 0;
 					this.level2 = 0;
 					this.inodeMulti2 = new int[1][4][4];
 					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
+					
+					this.inodePointer += 1;
+					this.level2 += 1;
 				}else if(this.level2 < 4 && this.inodePointer < 4){
 					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
-				}else if(this.level2 > 3 && this.incrementPointer() < 4){
+
+					this.inodePointer += 1;
+					this.level2 += 1;
+				}else if(this.level2 > 3 && this.inodePointer < 4){
+					this.incrementLevel();
+					this.setPointer(memoryIndex);
 					
+				}else if(this.level2 < 4 && this.inodePointer > 3){
+					this.inodePointer = 0;
+					this.level2 += 1;
+					this.setPointer(memoryIndex);
+				}else{
+					this.incrementLevel();
+					this.setPointer(memoryIndex);
 				}
-				this.inodePointer += 1;
-				this.level2 += 1;
 					break;
+				/*CASE 10*/
 				case 10: if(this.inodeMulti3 == null){
 					this.inodePointer = 0;
 					this.level2 = 0;
 					this.level3 = 0;
 					this.inodeMulti3 = new int[1][4][4][4];
 					this.inodeMulti3[0][this.level2][this.level3][this.inodePointer] = memoryIndex;
-				}else{
+				}else if(this.level2 < 4 && this.level3 < 4 && this.inodePointer < 4){
 					this.inodeMulti3[0][this.level2][this.level3][this.inodePointer] = memoryIndex;
+				}else if(this.level2 < 4 && this.level3 < 4 && this.inodePointer > 3){
+					this.level3 += 1;
+					this.inodePointer = 0;
+					this.setPointer(memoryIndex);
+				}else if(this.level2 < 4 && this.level3 > 3){
+					this.level2 += 1;
+					this.level3 = 0;
+					this.setPointer(memoryIndex);
+				}else{
+					this.incrementLevel();
+					this.setPointer(memoryIndex);
 				}
 					this.inodePointer += 1;
 					this.level2 += 1;
