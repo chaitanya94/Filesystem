@@ -8,6 +8,13 @@ public class Directory {
 	private ArrayList<Directory> subDirectories;
 	private Directory parent;
 	
+	public Directory(String DirectoryName, String DirectoryPath, Directory parent){
+		this.DirectoryName = DirectoryName;
+		this.DirectoryPath = DirectoryPath;
+		this.parent = parent;
+		this.files = new ArrayList<File>();
+	}
+	
 	public String getName(){
 		return this.DirectoryName;
 	}
@@ -37,8 +44,10 @@ public class Directory {
 	}
 	
 	public File getFile(String name){
+//		System.out.println("Name: "+ name);
 		for(File f: this.files){
-			if(f.getName() == name)
+//			System.out.println(f.getName());
+			if(f.getName().equals(name))
 				return f;
 		}
 		return null;

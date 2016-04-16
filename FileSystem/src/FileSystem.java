@@ -1,4 +1,5 @@
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class FileSystem{
@@ -14,6 +15,11 @@ public class FileSystem{
 			this.memoryUse[i] = false;
 		}
 		this.memoryIndex = 0;
+		this.currentDirectory = null;
+		
+		/*FOR TESTING - REMOVE LATER*/
+		this.currentDirectory = new Directory("root", "/", null);
+		/**/
 	}
 	
 	public void execute(String[] args) throws IOException{
@@ -25,6 +31,8 @@ public class FileSystem{
 				case "create": create(args);
 					break;
 				case "write":	write(args);
+					break;
+				case "mkdir": createDirectory(args);
 					break;
 				default: help();
 					break;
@@ -47,17 +55,19 @@ public class FileSystem{
 	}
 	
 	public void write(String[] args) throws IOException{
-		FileInputStream fileToRead = null;
+		BufferedReader fileToRead = null;
 		String nameToRead = args[2];
 		try{
-			fileToRead = new FileInputStream(nameToRead);
+			String currentDir = System.getProperty("user.dir");
+			System.out.println(currentDir+"/src/"+nameToRead);
+			fileToRead = new BufferedReader(new FileReader(currentDir+"/src/"+nameToRead));
 			/*Need to do the following:
 			 * 1. Open file using args[1]
 			 * 2. Find the pointer from which to write (OR)
 			 * 3. Add the pointer at which writing to the pointer list
 			 * */
-			File toWrite = this.currentDirectory.getFile(args[1]);
-			if(toWrite.isPointerFull()){
+			File toWrite = this.currentDirectory.getFile(args[1].trim());
+			if(toWrite.isPointerFull() == true){
 				toWrite.incrementLevel();
 				toWrite.setPointerFull(false);
 				
@@ -81,5 +91,9 @@ public class FileSystem{
 			if(fileToRead != null)
 				fileToRead.close();
 		}
+	}
+	
+	public void createDirectory(String[] args){
+		
 	}
 }
