@@ -1,0 +1,8 @@
+
+public class File {
+	private String FileName;
+	
+	public String getName(){
+		return this.FileName;
+	}
+}

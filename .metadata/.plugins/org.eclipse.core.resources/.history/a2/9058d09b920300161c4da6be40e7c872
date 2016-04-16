@@ -1,0 +1,20 @@
+import java.util.ArrayList;
+
+
+public class Directory {
+	private String DirectoryName;
+	private String DirectoryPath;
+	private ArrayList<File> files;
+	
+	public String getName(){
+		return this.DirectoryName;
+	}
+	
+	public String getDirectoryPath(){
+		return this.DirectoryPath;
+	}
+	
+	public boolean addFile(File f){
+		return this.files.add(f);
+	}
+}

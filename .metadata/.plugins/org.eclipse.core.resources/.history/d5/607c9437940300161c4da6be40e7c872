@@ -1,0 +1,15 @@
+import java.util.Scanner;
+
+public class FileSystem {
+	public static void main(String[] args){
+		if(args[0]==""){
+			help();
+		}
+	}
+	
+	public static void help(){
+		String str = "Welcome to the IT308 Filesystem. Please specify some input parameters. Some useful commands are:\n" +
+				"1. help";
+		System.out.println(str);
+	}
+}

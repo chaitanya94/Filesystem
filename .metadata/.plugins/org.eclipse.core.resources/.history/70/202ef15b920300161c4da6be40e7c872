@@ -1,0 +1,13 @@
+
+public class Directory {
+	private String DirectoryName;
+	private String DirectoryPath;
+	
+	public String getName(){
+		return this.DirectoryName;
+	}
+	
+	public String getDirectoryPath(){
+		return this.DirectoryPath;
+	}
+}
