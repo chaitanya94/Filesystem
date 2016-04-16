@@ -48,6 +48,8 @@ public class FileSystem implements Serializable{
 					break;
 				case "close": closeFile(args);
 					break;
+				case "checkLenFile": System.out.println(this.currentDirectory.numFiles());
+					break;
 				default: help();
 					break;
 			}
@@ -60,7 +62,10 @@ public class FileSystem implements Serializable{
 				"2. create <filename>\n" +
 				"3. write <filename> <file_to_read>\n" +
 				"4. mkdir <directory_name>\n" +
-				"5. read <file_name>";
+				"5. read <file_name>\n" +
+				"6. save <file_name\n" +
+				"7. open <file_name>\n" +
+				"8. close <file_name>";
 		System.out.println(str);
 	}
 	
@@ -76,7 +81,11 @@ public class FileSystem implements Serializable{
 		try{
 			String currentDir = System.getProperty("user.dir");
 //			System.out.println(currentDir+"/src/"+nameToRead);
-			fileToRead = new BufferedReader(new FileReader(currentDir+"/src/"+nameToRead));
+			try{				
+				fileToRead = new BufferedReader(new FileReader(currentDir+"/src/"+nameToRead));
+			}catch(Exception e){
+				System.out.println("File to read does not exist.");
+			}
 			/*Need to do the following:
 			 * 1. Open file using args[1]
 			 * 2. Find the pointer from which to write (OR)
@@ -115,7 +124,13 @@ public class FileSystem implements Serializable{
 	
 	public void readFile(String[] args){
 		String name = args[1];
-		File f = this.currentDirectory.getFile(name);
+		File f = null;
+		try{			
+			f = this.currentDirectory.getFile(name);
+		}catch(Exception e){
+			System.out.println("File does not exist.");
+			return;
+		}
 		
 		if(f != null){
 			int level = f.getInodeLevel();
@@ -189,7 +204,7 @@ public class FileSystem implements Serializable{
 	}
 	
 	public void closeFile(String[] args) throws IOException{
-		System.out.println("Do you want to save your changes? ");
+		System.out.print("Do you want to save your changes? ");
 		Scanner sc = new Scanner(System.in);
 		
 		if(sc.nextLine().equals("yes") || sc.nextLine().equals("y")){

@@ -58,4 +58,8 @@ public class Directory implements Serializable{
 		File f = this.getFile(name);
 		return this.files.remove(f);
 	}
+	
+	public int numFiles(){
+		return this.files.size();
+	}
 }
