@@ -35,4 +35,12 @@ public class Directory {
 	public Directory getParent(){
 		return this.parent;
 	}
+	
+	public File getFile(String name){
+		for(File f: this.files){
+			if(f.getName() == name)
+				return f;
+		}
+		return null;
+	}
 }

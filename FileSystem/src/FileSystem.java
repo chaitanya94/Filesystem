@@ -6,7 +6,7 @@ public class FileSystem{
 	public char[] memory = new char[1024*1024*20]; 
 	public boolean[] memoryUse = new boolean[1024*1024*20];
 	public Directory currentDirectory;
-	private long memoryIndex;
+	private int memoryIndex;
 	
 	public FileSystem(){
 		for(int i = 0; i < memory.length; i++){
@@ -56,6 +56,29 @@ public class FileSystem{
 			 * 2. Find the pointer from which to write (OR)
 			 * 3. Add the pointer at which writing to the pointer list
 			 * */
+			File toWrite = this.currentDirectory.getFile(args[1]);
+			if(toWrite.isPointerFull()){
+				toWrite.incrementPointer();
+				toWrite.setPointerFull(false);
+				toWrite.incrementLevel();
+				
+				toWrite.setPointer(this.memoryIndex);
+				int c;
+				int counter = 0;
+				while((c = fileToRead.read()) != -1){
+					this.memory[this.memoryIndex] = (char)c;
+					this.memoryIndex += 1;
+					counter += 1;
+					
+					if(counter > 4){
+						counter = 0;
+						toWrite.incrementPointer();
+						toWrite.setPointerFull(false);
+						toWrite.setPointer(this.memoryIndex);
+						toWrite.incrementLevel();
+					}
+				}
+			}
 		}finally{
 			if(fileToRead != null)
 				fileToRead.close();
