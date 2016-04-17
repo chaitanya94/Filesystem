@@ -12,6 +12,7 @@ public class Main {
 		FileSystem fs = null;
 		String currentDir = System.getProperty("user.dir");
 		currentDir = currentDir + "/src/";
+		/*Loading saved version of filesystem and memory so that consistency over sessions is achieved*/
 		try {
 			ObjectInputStream in=new ObjectInputStream(new FileInputStream(currentDir + "filesystem.dat"));
 			fs=(FileSystem)in.readObject();
@@ -25,7 +26,6 @@ public class Main {
 			memory = new Memory();
 		}
 		
-//		fs = new FileSystem(memory); 
 		fs.setMemory(memory);
 		Scanner sc = new Scanner(System.in);
 	
@@ -39,6 +39,7 @@ public class Main {
 			fs.execute(str);
 		}
 		System.out.print("Do you want to save changes? ");
+		/*Saving versions of filesystem and memory for future sessions*/
 		if(sc.nextLine().equals("yes") || sc.nextLine().equals("y")){
 			FileOutputStream fout = new FileOutputStream(currentDir + "filesystem.dat");
 			ObjectOutputStream out = new ObjectOutputStream(fout);

@@ -46,6 +46,7 @@ public class File implements Serializable{
 		this.pointerFull = b;
 	}
 	
+	/*Set pointer to data block in appropriate inode level*/
 	public void setPointer(int memoryIndex){
 		if(this.isMultilevel()){
 			int level = this.getLevel();
@@ -163,6 +164,7 @@ public class File implements Serializable{
 		this.end++;
 	}
 	
+	/*Returns the memory pointer at which last data block for file was written. Append can continue from there*/
 	public int initWrite(){
 		int memoryIndex = 0;
 		

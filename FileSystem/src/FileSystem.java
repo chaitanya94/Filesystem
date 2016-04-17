@@ -12,8 +12,8 @@ public class FileSystem implements Serializable{
 	/*20MB of memory with block size being 4 bytes*/
 	public Memory memory; 
 	public boolean[] memoryUse = new boolean[1024*1024*20];
-	public Directory currentDirectory;
-	private int memoryIndex;
+	public Directory currentDirectory; //Only considering the case of a single directory
+	private int memoryIndex; //Points to highest unallocated memory
 	
 	public FileSystem(Memory m){
 		this.memory = m;
@@ -24,9 +24,7 @@ public class FileSystem implements Serializable{
 			this.memoryUse[i] = false;
 		}
 		
-		/*FOR TESTING - REMOVE LATER*/
 		this.currentDirectory = new Directory("root", "/", null);
-		/**/
 	}
 	
 	public FileSystem(){
@@ -34,9 +32,7 @@ public class FileSystem implements Serializable{
 		this.memoryIndex = 0;
 		this.currentDirectory = null;
 		
-		/*FOR TESTING - REMOVE LATER*/
 		this.currentDirectory = new Directory("root", "/", null);
-		/**/
 	}
 	
 	public void execute(String[] args) throws IOException, ClassNotFoundException{
@@ -75,17 +71,20 @@ public class FileSystem implements Serializable{
 		}
 	}
 	
+	/*Lists the open files and directories*/
 	public void listFile(String[] args){
 		Directory d = this.currentDirectory;
 		d.printContent();
 	}
 	
+	/*Does a memory dump*/
 	public void memDump(String[] args){
 		for(int i = 0; i < this.memoryIndex; i++)
 			System.out.print(this.memory.data[i]);
 		System.out.println();
 	}
 	
+	/*Help for user*/
 	public void help(){
 		String str = "Welcome to the IT308 Filesystem. Please specify some input parameters. Some useful commands are:\n" +
 				"1. help\n" +
@@ -96,10 +95,12 @@ public class FileSystem implements Serializable{
 				"6. save <file_name\n" +
 				"7. open <file_name>\n" +
 				"8. close <file_name>\n" +
-				"9. seek <file_name> <start_byte> <end_byte> - Return inclusive of start and end byte";
+				"9. seek <file_name> <start_byte> <end_byte> - Return inclusive of start and end byte\n" +
+				"10. write <filename> <file_to_read> - Overrite existing";
 		System.out.println(str);
 	}
 	
+	/*Create a file*/
 	public boolean create(String[] args){
 		String name = args[1];
 		if(this.currentDirectory.getFile(name) != null){
@@ -110,6 +111,7 @@ public class FileSystem implements Serializable{
 		return this.currentDirectory.addFile(f);
 	}
 	
+	/*Writing into file overrites existing file*/
 	public void write(String[] args) throws IOException{
 		BufferedReader fileToRead = null;
 		if(args.length < 3){
@@ -135,6 +137,7 @@ public class FileSystem implements Serializable{
 		}
 	}
 	
+	/*Appends to a file*/
 	public void append(String[] args) throws IOException{
 		BufferedReader fileToRead = null;
 		if(args.length < 3){
@@ -201,9 +204,10 @@ public class FileSystem implements Serializable{
 	}
 	
 	public void createDirectory(String[] args){
-		/*TO FILL*/
+		/*Future scope*/
 	}
 	
+	/*Print contents of the file*/
 	public void readFile(String[] args){
 		String name = args[1];
 		File f = null;
@@ -285,6 +289,8 @@ public class FileSystem implements Serializable{
 			System.out.println("File does not exist!!");
 		}
 	}
+	
+	/*Save the file in a binary*/
 	public void saveFile(String[] args) throws IOException{
 		String currentDir = System.getProperty("user.dir");
 		currentDir = currentDir + "/src/";
@@ -298,6 +304,7 @@ public class FileSystem implements Serializable{
 		out.close();
 	}
 	
+	/*Open file from binary*/
 	public void openFile(String[] args) throws IOException, ClassNotFoundException{
 		String currentDir = System.getProperty("user.dir");
 		currentDir = currentDir + "/src/";
@@ -315,6 +322,7 @@ public class FileSystem implements Serializable{
 		}
 	}
 	
+	/*Remove file from existing set of open files*/
 	public void closeFile(String[] args) throws IOException{
 		System.out.print("Do you want to save your changes? ");
 		Scanner sc = new Scanner(System.in);
@@ -326,10 +334,12 @@ public class FileSystem implements Serializable{
 		this.currentDirectory.removeFile(name);
 	}
 	
+	/*Set memory image*/
 	public void setMemory(Memory m){
 		this.memory = m;
 	}
 	
+	/*Print contents of file from a given starting byte to an ending byte*/
 	public void seek(String[] args){
 		String name = args[1];
 		int startByte = Integer.valueOf(args[2]);

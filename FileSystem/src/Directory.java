@@ -44,10 +44,9 @@ public class Directory implements Serializable{
 		return this.parent;
 	}
 	
+	/*Returns an open file in the directory*/
 	public File getFile(String name){
-//		System.out.println("Name: "+ name);
 		for(File f: this.files){
-//			System.out.println(f.getName());
 			if(f.getName().equals(name))
 				return f;
 		}
@@ -63,8 +62,9 @@ public class Directory implements Serializable{
 		return this.files.size();
 	}
 	
+	/*Prints the open files and subdirectories*/
 	public void printContent(){
-		System.out.println("Files: ");
+		System.out.println("Open files: ");
 		if(this.files != null){
 			for(File f: this.files){
 				System.out.println(f.getName());
