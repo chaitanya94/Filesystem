@@ -20,6 +20,10 @@ public class FileSystem implements Serializable{
 		this.memoryIndex = 0;
 		this.currentDirectory = null;
 		
+		for(int i = 0; i < this.memoryUse.length; i++){
+			this.memoryUse[i] = false;
+		}
+		
 		/*FOR TESTING - REMOVE LATER*/
 		this.currentDirectory = new Directory("root", "/", null);
 		/**/
@@ -63,6 +67,8 @@ public class FileSystem implements Serializable{
 					break;
 				case "write": write(args);
 					break;
+				case "mem": memDump(args);
+					break;
 				default: help();
 					break;
 			}
@@ -72,6 +78,12 @@ public class FileSystem implements Serializable{
 	public void listFile(String[] args){
 		Directory d = this.currentDirectory;
 		d.printContent();
+	}
+	
+	public void memDump(String[] args){
+		for(int i = 0; i < this.memoryIndex; i++)
+			System.out.print(this.memory.data[i]);
+		System.out.println();
 	}
 	
 	public void help(){
@@ -150,15 +162,18 @@ public class FileSystem implements Serializable{
 			}
 			
 			int memPointer = toWrite.initWrite();
-			if(memPointer == -10){
+			int check = memPointer;
+			if(memPointer == -10){ //New file
 				memPointer = this.memoryIndex;
 			}
 			toWrite.incrementLevel();
 			
-			if(memPointer % 4 == 0)
-				toWrite.setPointer(memPointer);
-			int c;
 			int counter = toWrite.getSizeBytes() % 4;
+			if(check == -10){
+				System.out.println("Here");
+				toWrite.setPointer(memPointer);
+			}
+			int c;
 			
 			while((c = fileToRead.read()) != -1){
 				this.memory.data[memPointer] = (char)c;
@@ -240,6 +255,7 @@ public class FileSystem implements Serializable{
 							System.out.print(this.memory.data[inode[i] + j]);
 					}
 				}
+				System.out.println();
 			}
 			System.out.println();
 		}else{

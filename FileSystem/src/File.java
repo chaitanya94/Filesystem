@@ -58,6 +58,7 @@ public class File implements Serializable{
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
 					this.inodePointer += 1;
 				}else if(this.inodePointer < 3){
+					System.out.println("Here: "+memoryIndex);
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
 					this.inodePointer += 1;
 				}else{
