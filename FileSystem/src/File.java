@@ -46,7 +46,7 @@ public class File implements Serializable{
 	
 	public void setPointer(int memoryIndex){
 		if(this.isMultilevel()){
-			int level = this.getInodeLevel();
+			int level = this.getLevel();
 			
 			switch(level){
 				/*CASE 8*/
@@ -127,10 +127,6 @@ public class File implements Serializable{
 			this.inode[this.inodePointer] = memoryIndex;
 			this.inodePointer += 1;
 		}
-	}
-	
-	public int getInodeLevel(){
-		return this.inodeLevel;
 	}
 	
 	public void incrementLevel(){

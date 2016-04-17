@@ -59,6 +59,8 @@ public class FileSystem implements Serializable{
 					break;
 				case "ls": listFile(args);
 					break;
+				case "seek": seek(args);
+					break;
 				default: help();
 					break;
 			}
@@ -79,7 +81,8 @@ public class FileSystem implements Serializable{
 				"5. read <file_name>\n" +
 				"6. save <file_name\n" +
 				"7. open <file_name>\n" +
-				"8. close <file_name>";
+				"8. close <file_name>\n" +
+				"9. seek <file_name> <start_byte> <end_byte> - Return inclusive of start and end byte";
 		System.out.println(str);
 	}
 	
@@ -153,7 +156,7 @@ public class FileSystem implements Serializable{
 		}
 		
 		if(f != null){
-			int level = f.getInodeLevel();
+			int level = f.getLevel();
 			for(int i = 0;i < (level + 1); i++){
 				if(i == 8){
 					int[][] inodeMulti1 = f.getMulti1();
@@ -237,5 +240,95 @@ public class FileSystem implements Serializable{
 	
 	public void setMemory(Memory m){
 		this.memory = m;
+	}
+	
+	public void seek(String[] args){
+		String name = args[1];
+		int startByte = Integer.valueOf(args[2]);
+		int endByte = Integer.valueOf(args[3]);
+		
+		File f = this.currentDirectory.getFile(name);
+		int level = f.getLevel();
+		int fileSizeBytes = level*4;
+		if(level > 7){
+			switch(level){
+				case 8: fileSizeBytes = fileSizeBytes + 4*4;
+					break;
+				case 9: fileSizeBytes = fileSizeBytes + 4*4 + 4*4*4;
+					break;
+				case 10: fileSizeBytes = fileSizeBytes + 4*4 + 4*4*4 + 4*4*4*4;
+					break;
+				default: System.out.println("Filesize error");
+					return; 
+			}
+		}
+		
+		if(startByte > fileSizeBytes || endByte > fileSizeBytes){
+			System.out.println("Parameters exceed file size.");
+			return;
+		}
+		
+		int i = startByte/4;
+		int byteCount = 0;
+		while(i < level){
+			if(i == 8){
+				int[][] inodeMulti1 = f.getMulti1();
+				for(int j = 0;j < 4; j++){
+					for(int k = 0;k < 4; k++){
+						if(byteCount > endByte){
+							System.out.println();
+							return;
+						}	
+						if(byteCount >= startByte)
+							System.out.print(this.memory.data[inodeMulti1[0][j] + k]);
+						byteCount++;
+					}
+				}
+			}else if(i == 9){
+				int[][][] inodeMulti2 = f.getMulti2();
+				for(int j = 0;j < 4;j++){
+					for(int k = 0;k < 4;k++){
+						for(int p = 0;p < 4;p++){
+							if(byteCount > endByte){
+								System.out.println();
+								return;
+							}
+							if(byteCount >= startByte)
+								System.out.print(this.memory.data[inodeMulti2[0][j][k] + p]);
+							byteCount++;
+						}
+					}
+				}
+			}else if(i == 10){
+				int[][][][] inodeMulti3 = f.getMulti3();
+				for(int j = 0;j < 4; j++){
+					for(int k = 0;k < 4;k++){
+						for(int p = 0;p < 4;p++){
+							for(int q = 0;q < 4; q++){
+								if(byteCount > endByte){
+									System.out.println();
+									return;
+								}
+								if(byteCount >= startByte)
+									System.out.print(this.memory.data[inodeMulti3[0][j][k][p] + q]);
+								byteCount++;
+							}
+						}
+					}
+				}
+			}else{
+				int[] inode = f.getInode();
+				for(int j = 0; j < 4; j++){
+					if(byteCount > endByte){
+						System.out.println();
+						return;
+					}
+					if(byteCount >= startByte)
+						System.out.print(this.memory.data[inode[i] + j]);
+					byteCount++;
+				}
+			}
+			i++;
+		}
 	}
 }
