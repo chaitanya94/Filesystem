@@ -106,9 +106,8 @@ public class FileSystem implements Serializable{
 					
 					if(counter > 3){
 						counter = 0;
-						toWrite.incrementLevel();
-						toWrite.setPointerFull(false);
 						toWrite.setPointer(this.memoryIndex);
+						toWrite.setPointerFull(false);
 					}
 				}
 			}
@@ -139,7 +138,7 @@ public class FileSystem implements Serializable{
 					int[][] inodeMulti1 = f.getMulti1();
 					for(int j = 0;j < 4; j++){
 						for(int k = 0;k < 4; k++){
-							System.out.print(this.memory[inodeMulti1[0][j]] + k);
+							System.out.print(this.memory[inodeMulti1[0][j] + k]);
 						}
 					}
 				}else if(i == 9){
@@ -147,7 +146,7 @@ public class FileSystem implements Serializable{
 					for(int j = 0;j < 4;j++){
 						for(int k = 0;k < 4;k++){
 							for(int p = 0;p < 4;p++){
-								System.out.print(this.memory[inodeMulti2[0][j][k]] + p);
+								System.out.print(this.memory[inodeMulti2[0][j][k] + p]);
 							}
 						}
 					}
@@ -157,7 +156,7 @@ public class FileSystem implements Serializable{
 						for(int k = 0;k < 4;k++){
 							for(int p = 0;p < 4;p++){
 								for(int q = 0;q < 4; q++){
-									System.out.print(this.memory[inodeMulti3[0][j][k][p]] + q);
+									System.out.print(this.memory[inodeMulti3[0][j][k][p] + q]);
 								}
 							}
 						}

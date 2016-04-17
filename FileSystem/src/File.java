@@ -54,11 +54,9 @@ public class File implements Serializable{
 					this.inodePointer = 0;
 					this.inodeMulti1 = new int[1][4]; //Block size is 4
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
-					
 					this.inodePointer += 1;
 				}else if(this.inodePointer < 3){
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
-					
 					this.inodePointer += 1;
 				}else{
 					this.incrementLevel();
@@ -121,6 +119,11 @@ public class File implements Serializable{
 					break;
 			}
 		}else{
+			if(this.inodePointer > 7){
+				this.incrementLevel();
+				this.setPointer(memoryIndex);
+				return;
+			}
 			this.inode[this.inodePointer] = memoryIndex;
 			this.inodePointer += 1;
 		}
