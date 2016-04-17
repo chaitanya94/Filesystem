@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) throws IOException, ClassNotFoundException{  
-//		Memory memory;
+		Memory memory;
 		FileSystem fs = null;
 		String currentDir = System.getProperty("user.dir");
 		currentDir = currentDir + "/src/";
@@ -16,11 +16,17 @@ public class Main {
 			ObjectInputStream in=new ObjectInputStream(new FileInputStream(currentDir + "filesystem.dat"));
 			fs=(FileSystem)in.readObject();
 			in.close();
+			
+			ObjectInputStream inM=new ObjectInputStream(new FileInputStream(currentDir + "memory.dat"));
+			memory=(Memory)inM.readObject();
+			inM.close();
 		} catch (Exception e){
 			fs = new FileSystem();
+			memory = new Memory();
 		}
 		
 //		fs = new FileSystem(memory); 
+		fs.setMemory(memory);
 		Scanner sc = new Scanner(System.in);
 	
 		System.out.println("Welcome to the IT308 Filesystem");
@@ -34,12 +40,19 @@ public class Main {
 		}
 		System.out.print("Do you want to save changes? ");
 		if(sc.nextLine().equals("yes") || sc.nextLine().equals("y")){
-			FileOutputStream fout = new FileOutputStream(currentDir + "memory.dat");
+			FileOutputStream fout = new FileOutputStream(currentDir + "filesystem.dat");
 			ObjectOutputStream out = new ObjectOutputStream(fout);
 
 			out.writeObject(fs);
 			out.flush();
 			out.close();
+		
+			FileOutputStream foutM = new FileOutputStream(currentDir + "memory.dat");
+			ObjectOutputStream outM = new ObjectOutputStream(foutM);
+
+			outM.writeObject(memory);
+			outM.flush();
+			outM.close();
 		}else{
 			System.out.println("Changes not saved");
 		}

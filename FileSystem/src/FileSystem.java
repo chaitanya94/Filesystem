@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class FileSystem implements Serializable{
 	/*20MB of memory with block size being 4 bytes*/
 	public Memory memory; 
-	public boolean[] memoryUse = new boolean[1024*1024*20];
+//	public boolean[] memoryUse = new boolean[1024*1024*20];
 	public Directory currentDirectory;
 	private int memoryIndex;
 	
@@ -235,5 +235,7 @@ public class FileSystem implements Serializable{
 		this.currentDirectory.removeFile(name);
 	}
 	
-	
+	public void setMemory(Memory m){
+		this.memory = m;
+	}
 }
