@@ -25,6 +25,16 @@ public class FileSystem implements Serializable{
 		/**/
 	}
 	
+	public FileSystem(){
+		this.memory = new Memory();
+		this.memoryIndex = 0;
+		this.currentDirectory = null;
+		
+		/*FOR TESTING - REMOVE LATER*/
+		this.currentDirectory = new Directory("root", "/", null);
+		/**/
+	}
+	
 	public void execute(String[] args) throws IOException, ClassNotFoundException{
 		
 		if(args[0]==""){
@@ -77,7 +87,6 @@ public class FileSystem implements Serializable{
 		String nameToRead = args[2];
 		try{
 			String currentDir = System.getProperty("user.dir");
-//			System.out.println(currentDir+"/src/"+nameToRead);
 			try{				
 				fileToRead = new BufferedReader(new FileReader(currentDir+"/src/"+nameToRead));
 			}catch(Exception e){
@@ -89,6 +98,10 @@ public class FileSystem implements Serializable{
 			 * 3. Add the pointer at which writing to the pointer list
 			 * */
 			File toWrite = this.currentDirectory.getFile(args[1].trim());
+			if(toWrite == null){
+				System.out.println("File does not exist.");
+				return;
+			}
 			if(toWrite.isPointerFull() == true){
 				toWrite.incrementLevel();
 				toWrite.setPointerFull(false);

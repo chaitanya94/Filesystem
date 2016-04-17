@@ -8,19 +8,19 @@ import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) throws IOException, ClassNotFoundException{  
-		Memory memory;
+//		Memory memory;
 		FileSystem fs = null;
 		String currentDir = System.getProperty("user.dir");
 		currentDir = currentDir + "/src/";
 		try {
-			ObjectInputStream in=new ObjectInputStream(new FileInputStream(currentDir + "memory.dat"));
-			memory=(Memory)in.readObject();
+			ObjectInputStream in=new ObjectInputStream(new FileInputStream(currentDir + "filesystem.dat"));
+			fs=(FileSystem)in.readObject();
 			in.close();
 		} catch (Exception e){
-			memory = new Memory();
+			fs = new FileSystem();
 		}
 		
-		fs = new FileSystem(memory); 
+//		fs = new FileSystem(memory); 
 		Scanner sc = new Scanner(System.in);
 	
 		System.out.println("Welcome to the IT308 Filesystem");
@@ -37,7 +37,7 @@ public class Main {
 			FileOutputStream fout = new FileOutputStream(currentDir + "memory.dat");
 			ObjectOutputStream out = new ObjectOutputStream(fout);
 
-			out.writeObject(memory);
+			out.writeObject(fs);
 			out.flush();
 			out.close();
 		}else{
