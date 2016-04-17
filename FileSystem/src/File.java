@@ -49,7 +49,6 @@ public class File implements Serializable{
 	public void setPointer(int memoryIndex){
 		if(this.isMultilevel()){
 			int level = this.getLevel();
-			System.out.println(level);
 			switch(level){
 				/*CASE 8*/
 				case 8: if(this.inodeMulti1 == null){
@@ -57,8 +56,7 @@ public class File implements Serializable{
 					this.inodeMulti1 = new int[1][4]; //Block size is 4
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
 					this.inodePointer += 1;
-				}else if(this.inodePointer < 3){
-					System.out.println("Here: "+memoryIndex);
+				}else if(this.inodePointer < 4){
 					this.inodeMulti1[0][this.inodePointer] = memoryIndex;
 					this.inodePointer += 1;
 				}else{

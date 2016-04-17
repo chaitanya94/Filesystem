@@ -170,7 +170,6 @@ public class FileSystem implements Serializable{
 			
 			int counter = toWrite.getSizeBytes() % 4;
 			if(check == -10){
-				System.out.println("Here");
 				toWrite.setPointer(memPointer);
 			}
 			int c;
@@ -255,7 +254,6 @@ public class FileSystem implements Serializable{
 							System.out.print(this.memory.data[inode[i] + j]);
 					}
 				}
-				System.out.println();
 			}
 			System.out.println();
 		}else{
