@@ -11,6 +11,7 @@ public class File implements Serializable{
 	private boolean pointerFull; /*Is the current inode pointer full?*/
 	private int inodeLevel;
 	private int level2, level3;
+	private int end;
 	
 	public File(String FileName, String FilePath ){
 		this.FileName = FileName;
@@ -19,6 +20,7 @@ public class File implements Serializable{
 		this.inodePointer = 0;
 		this.pointerFull = true;
 		this.inodeLevel = -1;
+		this.end = 0;
 		
 		for(int i = 0;i < this.inode.length; i++)
 			this.inode[i] = -1;
@@ -47,7 +49,6 @@ public class File implements Serializable{
 	public void setPointer(int memoryIndex){
 		if(this.isMultilevel()){
 			int level = this.getLevel();
-			
 			switch(level){
 				/*CASE 8*/
 				case 8: if(this.inodeMulti1 == null){
@@ -151,5 +152,38 @@ public class File implements Serializable{
 	
 	public int[][][][] getMulti3(){
 		return this.inodeMulti3;
+	}
+	
+	public int getSizeBytes(){
+		return this.end;
+	}
+	
+	public void incrementSize(){
+		this.end++;
+	}
+	
+	public int initWrite(){
+		int memoryIndex = 0;
+		
+		if(this.inodeLevel < 0)
+			return -10;
+		
+		if(this.isMultilevel()){
+			int l = this.getLevel();
+			switch(l){
+				case 8: memoryIndex = this.inodeMulti1[0][this.inodePointer - 1] + (this.end % 4);
+					break;
+				case 9: memoryIndex = this.inodeMulti2[0][this.level2 - 1][this.inodePointer - 1] + (this.end % 4);
+					break;
+				case 10: memoryIndex = this.inodeMulti3[0][this.level2 - 1][this.level3 - 1][this.inodePointer - 1] + (this.end % 4);
+					break;
+				default: System.out.println("Initialize error");
+					break;
+			}
+		}else{
+			memoryIndex = this.inode[this.inodePointer - 1] + (this.end % 4) ;
+		}
+		this.inodeLevel--; //Because you increment once when writing
+		return memoryIndex;
 	}
 }
