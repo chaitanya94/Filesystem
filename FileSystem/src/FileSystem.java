@@ -10,16 +10,13 @@ import java.util.Scanner;
 
 public class FileSystem implements Serializable{
 	/*20MB of memory with block size being 4 bytes*/
-	public char[] memory = new char[1024*1024*20]; 
+	public Memory memory; 
 	public boolean[] memoryUse = new boolean[1024*1024*20];
 	public Directory currentDirectory;
 	private int memoryIndex;
 	
-	public FileSystem(){
-		for(int i = 0; i < memory.length; i++){
-			this.memory[i] = '\0';
-			this.memoryUse[i] = false;
-		}
+	public FileSystem(Memory m){
+		this.memory = m;
 		this.memoryIndex = 0;
 		this.currentDirectory = null;
 		
@@ -100,7 +97,7 @@ public class FileSystem implements Serializable{
 				int c;
 				int counter = 0;
 				while((c = fileToRead.read()) != -1){
-					this.memory[this.memoryIndex] = (char)c;
+					this.memory.data[this.memoryIndex] = (char)c;
 					this.memoryIndex += 1;
 					counter += 1;
 					
@@ -138,7 +135,7 @@ public class FileSystem implements Serializable{
 					int[][] inodeMulti1 = f.getMulti1();
 					for(int j = 0;j < 4; j++){
 						for(int k = 0;k < 4; k++){
-							System.out.print(this.memory[inodeMulti1[0][j] + k]);
+							System.out.print(this.memory.data[inodeMulti1[0][j] + k]);
 						}
 					}
 				}else if(i == 9){
@@ -146,7 +143,7 @@ public class FileSystem implements Serializable{
 					for(int j = 0;j < 4;j++){
 						for(int k = 0;k < 4;k++){
 							for(int p = 0;p < 4;p++){
-								System.out.print(this.memory[inodeMulti2[0][j][k] + p]);
+								System.out.print(this.memory.data[inodeMulti2[0][j][k] + p]);
 							}
 						}
 					}
@@ -156,7 +153,7 @@ public class FileSystem implements Serializable{
 						for(int k = 0;k < 4;k++){
 							for(int p = 0;p < 4;p++){
 								for(int q = 0;q < 4; q++){
-									System.out.print(this.memory[inodeMulti3[0][j][k][p] + q]);
+									System.out.print(this.memory.data[inodeMulti3[0][j][k][p] + q]);
 								}
 							}
 						}
@@ -164,7 +161,7 @@ public class FileSystem implements Serializable{
 				}else{
 					int[] inode = f.getInode();
 					for(int j = 0; j < 4; j++){
-						System.out.print(this.memory[inode[i] + j]);
+						System.out.print(this.memory.data[inode[i] + j]);
 					}
 				}
 			}
