@@ -85,6 +85,10 @@ public class FileSystem implements Serializable{
 	
 	public boolean create(String[] args){
 		String name = args[1];
+		if(this.currentDirectory.getFile(name) != null){
+			System.out.println("File already exits.");
+			return false;
+		}
 		File f = new File(name, this.currentDirectory.getDirectoryPath());
 		return this.currentDirectory.addFile(f);
 	}
@@ -213,10 +217,11 @@ public class FileSystem implements Serializable{
 					currentDir + fileName + ".dat"));
 			f = (File) in.readObject();
 			in.close();
+			
+			this.currentDirectory.addFile(f);
 		}catch (Exception e){
 			System.out.println("File does not exist. Please create file!");
 		}
-		this.currentDirectory.addFile(f);
 	}
 	
 	public void closeFile(String[] args) throws IOException{
