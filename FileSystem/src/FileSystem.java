@@ -159,6 +159,7 @@ public class FileSystem implements Serializable{
 				toWrite.setPointer(memPointer);
 			int c;
 			int counter = toWrite.getSizeBytes() % 4;
+			
 			while((c = fileToRead.read()) != -1){
 				this.memory.data[memPointer] = (char)c;
 				this.memoryUse[memPointer] = true;

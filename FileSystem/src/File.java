@@ -49,6 +49,7 @@ public class File implements Serializable{
 	public void setPointer(int memoryIndex){
 		if(this.isMultilevel()){
 			int level = this.getLevel();
+			System.out.println(level);
 			switch(level){
 				/*CASE 8*/
 				case 8: if(this.inodeMulti1 == null){
@@ -72,12 +73,10 @@ public class File implements Serializable{
 					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
 					
 					this.inodePointer += 1;
-					this.level2 += 1;
 				}else if(this.level2 < 4 && this.inodePointer < 4){
 					this.inodeMulti2[0][this.level2][this.inodePointer] = memoryIndex;
 
 					this.inodePointer += 1;
-					this.level2 += 1;
 				}else if(this.level2 > 3 && this.inodePointer < 4){
 					this.incrementLevel();
 					this.setPointer(memoryIndex);
@@ -98,23 +97,26 @@ public class File implements Serializable{
 					this.level3 = 0;
 					this.inodeMulti3 = new int[1][4][4][4];
 					this.inodeMulti3[0][this.level2][this.level3][this.inodePointer] = memoryIndex;
+					
+					this.inodePointer += 1;
 				}else if(this.level2 < 4 && this.level3 < 4 && this.inodePointer < 4){
 					this.inodeMulti3[0][this.level2][this.level3][this.inodePointer] = memoryIndex;
+					
+					this.inodePointer += 1;
 				}else if(this.level2 < 4 && this.level3 < 4 && this.inodePointer > 3){
 					this.level3 += 1;
 					this.inodePointer = 0;
 					this.setPointer(memoryIndex);
+					
 				}else if(this.level2 < 4 && this.level3 > 3){
 					this.level2 += 1;
 					this.level3 = 0;
+					this.inodePointer = 0;
 					this.setPointer(memoryIndex);
 				}else{
 					this.incrementLevel();
 					this.setPointer(memoryIndex);
 				}
-					this.inodePointer += 1;
-					this.level2 += 1;
-					this.level3 += 1;
 					break;
 				default: System.out.println("Error setting inode pointer");
 					break;
