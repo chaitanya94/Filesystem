@@ -57,10 +57,17 @@ public class FileSystem implements Serializable{
 					break;
 				case "checkLenFile": System.out.println(this.currentDirectory.numFiles());
 					break;
+				case "ls": listFile(args);
+					break;
 				default: help();
 					break;
 			}
 		}
+	}
+	
+	public void listFile(String[] args){
+		Directory d = this.currentDirectory;
+		d.printContent();
 	}
 	
 	public void help(){
@@ -222,4 +229,6 @@ public class FileSystem implements Serializable{
 		String name = args[1];
 		this.currentDirectory.removeFile(name);
 	}
+	
+	
 }

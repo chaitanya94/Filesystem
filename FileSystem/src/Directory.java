@@ -62,4 +62,20 @@ public class Directory implements Serializable{
 	public int numFiles(){
 		return this.files.size();
 	}
+	
+	public void printContent(){
+		System.out.println("Files: ");
+		if(this.files != null){
+			for(File f: this.files){
+				System.out.println(f.getName());
+			}
+		}
+		System.out.println();
+		System.out.println("Sub-directories: ");
+		if(this.subDirectories != null){
+			for(Directory d: this.subDirectories){
+				System.out.println(d.getName());
+			}
+		}
+	}
 }
